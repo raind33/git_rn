@@ -55,7 +55,6 @@ export function onLoadMorePopular(
   callBack
 ) {
   return dispatch => {
-    dataArray = [1, 2, 3]
     setTimeout(() => {
       //模拟网络请求
       if ((pageIndex - 1) * pageSize >= dataArray.length) {
@@ -76,14 +75,14 @@ export function onLoadMorePopular(
           pageSize * pageIndex > dataArray.length
             ? dataArray.length
             : pageSize * pageIndex
-        _projectModels(dataArray.slice(0, max), favoriteDao, data => {
-          dispatch({
-            type: Types.POPULAR_LOAD_MORE_SUCCESS,
-            storeName,
-            pageIndex,
-            projectModels: data
-          })
+        dispatch({
+          type: Types.POPULAR_LOAD_MORE_SUCCESS,
+          storeName,
+          pageIndex,
+          projectModels: dataArray.slice(0, max)
         })
+        // _projectModels(dataArray.slice(0, max), favoriteDao, data => {
+        // })
       }
     }, 500)
   }

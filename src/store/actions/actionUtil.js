@@ -44,7 +44,7 @@ export function handleData(
   dispatch({
     type: actionType,
     items: fixItems,
-    // projectModels: projectModels,
+    projectModels: showItems,
     storeName,
     pageIndex: 1,
     ...params

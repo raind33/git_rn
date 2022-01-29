@@ -1,18 +1,29 @@
-import React, { memo, useEffect } from 'react'
-import { View, Text, StyleSheet, FlatList, RefreshControl } from 'react-native'
+import React, { memo, useEffect, useRef } from 'react'
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  ActivityIndicator,
+  RefreshControl
+} from 'react-native'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import { useSelector, useDispatch } from 'react-redux'
-import { onRefreshPopular } from '../../store/actions'
+import { onLoadMorePopular, onRefreshPopular } from '../../store/actions'
 import PopularItem from '../../components/PopularItem'
+import Toast from 'react-native-easy-toast'
 
 const URL = 'https://api.github.com/search/repositories?q='
 const Tab = createMaterialTopTabNavigator()
 const QUERY_STR = '&sort=stars'
-function Tab1() {
+const pageSize = 10
+function TabContent(props) {
+  const name = props.route.name
   const dispatch = useDispatch()
-  const url = URL + 'ios' + QUERY_STR
+  const toast = useRef(null)
+  const url = URL + name + QUERY_STR
   let data = useSelector(state => {
-    return state.popular?.ios
+    return state.popular?.[name]
   })
   if (!data) {
     data = {
@@ -22,25 +33,48 @@ function Tab1() {
       hideLoadingMore: true //默认隐藏加载更多
     }
   }
-  const renderItem = data => {
-    return <PopularItem item={data.item} />
+  const renderItem = source => {
+    return <PopularItem index={source.index} item={source.item} />
   }
-  const refreshData = () => {
-    dispatch(onRefreshPopular('ios', url, 20))
+  const genIndicator = () => {
+    return data.hideLoadingMore ? null : (
+      <View style={styles.indicatorContainer}>
+        <ActivityIndicator style={styles.indicator} />
+        <Text>正在加载更多</Text>
+      </View>
+    )
+  }
+
+  const loadData = flag => {
+    if (flag) {
+      dispatch(
+        onLoadMorePopular(name, ++data.pageIndex, pageSize, data.items, () => {
+          toast.current.show('没有更多了')
+        })
+      )
+    } else {
+      dispatch(onRefreshPopular(name, url, pageSize))
+    }
   }
   useEffect(() => {
-    dispatch(onRefreshPopular('ios', url, 20))
-  }, [dispatch, url])
+    dispatch(onRefreshPopular(name, url, pageSize))
+    console.log(name)
+  }, [dispatch, url, name])
   return (
     <View style={styles.container}>
       <FlatList
         keyExtractor={item => '' + item.id}
-        data={data.items}
+        data={data.projectModels}
         renderItem={renderItem}
+        ListFooterComponent={genIndicator()}
+        onEndReached={() => {
+          loadData(true)
+        }}
+        onEndReachedThreshold={0.5}
         refreshControl={
           <RefreshControl
             titleColor={'red'}
-            onRefresh={refreshData}
+            onRefresh={loadData}
             tintColor={'red'}
             colors={['red']}
             refreshing={data.isLoading}
@@ -48,22 +82,16 @@ function Tab1() {
           />
         }
       />
-    </View>
-  )
-}
-function Tab2() {
-  return (
-    <View>
-      <Text>tab2</Text>
+      <Toast ref={toast} position={'center'} />
     </View>
   )
 }
 export default memo(function Home() {
   return (
     <Tab.Navigator>
-      <Tab.Screen name="java" component={Tab1} />
-      <Tab.Screen name="ios" component={Tab2} />
-      <Tab.Screen name="android" component={Tab2} />
+      <Tab.Screen name="java" component={TabContent} />
+      <Tab.Screen name="ios" component={TabContent} />
+      <Tab.Screen name="android" component={TabContent} />
     </Tab.Navigator>
   )
 })

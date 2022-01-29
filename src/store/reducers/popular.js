@@ -53,7 +53,7 @@ export default function onAction(state = defaultState, action) {
       }
     case Types.POPULAR_LOAD_MORE_SUCCESS: //上拉加载更多成功
       return {
-        ...state, //Object.assign @http://www.devio.org/2018/09/09/ES6-ES7-ES8-Feature/
+        ...state,
         [action.storeName]: {
           ...state[action.storeName],
           projectModels: action.projectModels,
