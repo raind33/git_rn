@@ -5,6 +5,7 @@ import {
   StyleSheet,
   FlatList,
   ActivityIndicator,
+  TouchableOpacity,
   RefreshControl
 } from 'react-native'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
@@ -12,6 +13,8 @@ import { useSelector, useDispatch } from 'react-redux'
 import { onLoadMorePopular, onRefreshPopular } from '../../store/actions'
 import PopularItem from '../../components/PopularItem'
 import Toast from 'react-native-easy-toast'
+import NavigationBar from '../../components/NavigationBar'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 
 const URL = 'https://api.github.com/search/repositories?q='
 const Tab = createMaterialTopTabNavigator()
@@ -87,12 +90,44 @@ function TabContent(props) {
   )
 }
 export default memo(function Home() {
+  let statusBar = {
+    backgroundColor: 'red',
+    barStyle: 'light-content'
+  }
+  const renderRightButton = () => {
+    return (
+      <TouchableOpacity>
+        <View style={{ padding: 5, marginRight: 8 }}>
+          <Ionicons
+            name={'ios-search'}
+            size={24}
+            style={{
+              marginRight: 8,
+              alignSelf: 'center',
+              color: 'white'
+            }}
+          />
+        </View>
+      </TouchableOpacity>
+    )
+  }
+  let navigationBar = (
+    <NavigationBar
+      title={'最热'}
+      statusBar={statusBar}
+      style={{ backgroundColor: 'gray' }}
+      rightButton={renderRightButton()}
+    />
+  )
   return (
-    <Tab.Navigator>
-      <Tab.Screen name="java" component={TabContent} />
-      <Tab.Screen name="ios" component={TabContent} />
-      <Tab.Screen name="android" component={TabContent} />
-    </Tab.Navigator>
+    <View style={{ flex: 1 }}>
+      {navigationBar}
+      <Tab.Navigator>
+        <Tab.Screen name="java" component={TabContent} />
+        <Tab.Screen name="ios" component={TabContent} />
+        <Tab.Screen name="android" component={TabContent} />
+      </Tab.Navigator>
+    </View>
   )
 })
 const styles = StyleSheet.create({

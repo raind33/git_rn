@@ -16,9 +16,10 @@ export default memo(function Main() {
         options={{
           tabBarIcon: ({ size, focused, color }) => {
             return <Icon size={26} color={color} name="whatshot" />
-          }
+          },
+          headerShown: false
         }}
-        name="Home"
+        name="hot"
         component={Home}
       />
       <Tab.Screen
