@@ -11,6 +11,7 @@ import { useColorScheme } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import Welcome from './src/pages/welcome/Welcome.js'
+import Login from './src/pages/login/Login'
 import Main from './src/pages/main/Main.js'
 import { Provider } from 'react-redux'
 import store from './src/store'
@@ -20,7 +21,11 @@ const App = () => {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator>
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false
+          }}>
+          <Stack.Screen name="login" component={Login} />
           <Stack.Screen
             name="welcome"
             component={Welcome}
