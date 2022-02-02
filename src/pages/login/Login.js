@@ -46,7 +46,6 @@ export default props => {
         <Input
           label="用户名"
           placehodler="请输入用户名"
-          shortLine={true}
           onChangeText={text => setUserName(text)}
         />
         <Input

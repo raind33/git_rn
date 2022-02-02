@@ -10,6 +10,7 @@ export default {
   login: {
     api: 'user/login'
   },
+  apiDoc: 'https://api.devio.org/uapi/swagger-ui.html#/',
   registration: {
     api: 'user/registration'
   },

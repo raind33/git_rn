@@ -4,7 +4,7 @@ const KEY_BOADRDING_PASS = 'boarding-pass'
  * 保存登录态
  * @param data
  */
-export function saveBoarding(data: string) {
+export function saveBoarding(data) {
   AsyncStorage.setItem(KEY_BOADRDING_PASS, data)
 }
 /**
