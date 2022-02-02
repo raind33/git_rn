@@ -15,13 +15,14 @@ import PopularItem from '../../components/PopularItem'
 import Toast from 'react-native-easy-toast'
 import NavigationBar from '../../components/NavigationBar'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-
+import { tabs } from '../../config/constants'
+import { tabNav } from '../../components/NavigationDelegate'
 const URL = 'https://api.github.com/search/repositories?q='
 const Tab = createMaterialTopTabNavigator()
 const QUERY_STR = '&sort=stars'
 const pageSize = 10
 function TabContent(props) {
-  const name = props.route.name
+  const name = props.tabLabel
   const dispatch = useDispatch()
   const toast = useRef(null)
   const url = URL + name + QUERY_STR
@@ -89,6 +90,7 @@ function TabContent(props) {
     </View>
   )
 }
+
 export default memo(function Home() {
   let statusBar = {
     backgroundColor: 'red',
@@ -115,18 +117,22 @@ export default memo(function Home() {
     <NavigationBar
       title={'最热'}
       statusBar={statusBar}
-      style={{ backgroundColor: 'gray' }}
+      style={{ backgroundColor: '#2196f3' }}
       rightButton={renderRightButton()}
     />
   )
+  const TabNavigator = tabs.length
+    ? tabNav({ Component: TabContent, theme: { themeColor: '#2196f3' }, tabs })
+    : null
   return (
     <View style={{ flex: 1 }}>
       {navigationBar}
-      <Tab.Navigator>
+      {TabNavigator}
+      {/* <Tab.Navigator>
         <Tab.Screen name="java" component={TabContent} />
         <Tab.Screen name="ios" component={TabContent} />
         <Tab.Screen name="android" component={TabContent} />
-      </Tab.Navigator>
+      </Tab.Navigator> */}
     </View>
   )
 })

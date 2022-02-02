@@ -45,9 +45,7 @@ export default class NavigationBar extends Component {
 
   render() {
     let statusBar = !this.props.statusBar.hidden ? (
-      <View style={styles.statusBar}>
-        <StatusBar {...this.props.statusBar} />
-      </View>
+      <StatusBar {...this.props.statusBar} />
     ) : null
 
     let titleView = this.props.titleView ? (
@@ -83,7 +81,7 @@ export default class NavigationBar extends Component {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#2196f3',
-    marginTop: 30
+    paddingTop: 30
   },
   navBarButton: {
     alignItems: 'center'

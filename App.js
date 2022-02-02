@@ -25,7 +25,6 @@ const App = () => {
           screenOptions={{
             headerShown: false
           }}>
-          <Stack.Screen name="login" component={Login} />
           <Stack.Screen
             name="welcome"
             component={Welcome}
@@ -33,13 +32,8 @@ const App = () => {
               title: '欢迎页'
             }}
           />
-          <Stack.Screen
-            name="main"
-            component={Main}
-            options={{
-              headerShown: false
-            }}
-          />
+          <Stack.Screen name="login" component={Login} />
+          <Stack.Screen name="main" component={Main} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

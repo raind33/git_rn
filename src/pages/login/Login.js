@@ -6,6 +6,7 @@ import ConfirmButton from './components/ConfirmButton'
 import Tips from './components/Tips'
 import Constants from '../../config/constants'
 import LoginApi from '../../api/login'
+import NavigationUtil from '../../utils/NavigationUtils'
 
 export default props => {
   const [userName, setUserName] = useState('')
@@ -24,7 +25,7 @@ export default props => {
     LoginApi.getInstance()
       .login(userName, password)
       .then(res => {
-        setMsg('登录成功')
+        NavigationUtil.resetToHomePage(props)
       })
       .catch(e => {
         const { code, data: { helpUrl = '' } = {}, msg } = e

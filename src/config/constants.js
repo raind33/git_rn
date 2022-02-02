@@ -24,3 +24,41 @@ export default {
     api: 'test/test'
   }
 }
+export const tabs = [
+  {
+    path: 'stars:>1',
+    name: 'ALL',
+    short_name: 'ALL',
+    checked: true
+  },
+  {
+    path: 'iOS',
+    name: 'iOS',
+    checked: true
+  },
+  {
+    path: 'react-native',
+    name: 'React Native',
+    checked: true
+  },
+  {
+    path: 'MySQL',
+    name: 'MySQL',
+    checked: false
+  },
+  {
+    path: 'AngularJS',
+    name: 'AngularJS',
+    checked: false
+  },
+  {
+    path: 'jQuery',
+    name: 'jQuery',
+    checked: false
+  },
+  {
+    path: 'react',
+    name: 'React',
+    checked: true
+  }
+]

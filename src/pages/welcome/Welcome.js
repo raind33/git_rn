@@ -1,14 +1,23 @@
-import React, { memo, useEffect, useRef } from 'react'
+import React, { memo, useCallback, useEffect, useRef } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
+import { getBoarding } from '../../utils/BoardingUtil'
 import NavigationUtils from '../../utils/NavigationUtils'
 export default memo(function Welcome(props) {
   const timer = useRef(null)
-  useEffect(() => {
-    timer.current = setTimeout(() => {
-      NavigationUtils.goHome(props)
-    }, 2000)
-    return () => clearTimeout(timer.current)
+  const fn = useCallback(async () => {
+    const boarding = await getBoarding()
+    if (boarding) {
+      timer.current = setTimeout(() => {
+        NavigationUtils.resetToHomePage(props)
+      }, 2000)
+    } else {
+      NavigationUtils.login(props)
+    }
   }, [props])
+  useEffect(() => {
+    fn()
+    return () => clearTimeout(timer.current)
+  }, [fn])
   return (
     <View style={styles.container}>
       <Text>welcome</Text>
