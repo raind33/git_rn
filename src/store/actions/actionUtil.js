@@ -34,6 +34,8 @@ export function handleData(
     } else if (Array.isArray(data.data.items)) {
       fixItems = data.data.items
     }
+  } else {
+    fixItems = data
   }
   //第一次要加载的数据
   let showItems =

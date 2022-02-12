@@ -3,7 +3,13 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import { StyleSheet } from 'react-native'
 const Tab = createMaterialTopTabNavigator()
 
-export function tabNav({ Component, tabs, theme, extra = ({} = {}) }) {
+export function tabNav({
+  Component,
+  tabs,
+  theme,
+  uniKey = '',
+  extra = ({} = {})
+}) {
   return (
     <Tab.Navigator
       screenOptions={{
@@ -21,7 +27,7 @@ export function tabNav({ Component, tabs, theme, extra = ({} = {}) }) {
       {Object.entries(_genTabs({ Component, tabs, theme, extra })).map(item => {
         return (
           <Tab.Screen
-            key={item[0]}
+            key={item[0] + uniKey}
             name={item[0]}
             component={item[1].screen}
             options={item[1].navigationOptions}

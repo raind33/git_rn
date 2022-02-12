@@ -15,6 +15,7 @@ import Login from './src/pages/login/Login'
 import Main from './src/pages/main/Main.js'
 import { Provider } from 'react-redux'
 import store from './src/store'
+import DetailPage from './src/pages/detail/Detail.js'
 
 const Stack = createNativeStackNavigator()
 const App = () => {
@@ -34,6 +35,7 @@ const App = () => {
           />
           <Stack.Screen name="login" component={Login} />
           <Stack.Screen name="main" component={Main} />
+          <Stack.Screen name="detail" component={DetailPage} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

@@ -26,7 +26,8 @@ export default memo(function Main() {
         options={{
           tabBarIcon: ({ size, focused, color }) => {
             return <Icon size={26} color={color} name="trending-up" />
-          }
+          },
+          headerShown: false
         }}
         name="trend"
         component={Trend}

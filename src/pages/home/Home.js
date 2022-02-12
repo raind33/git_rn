@@ -17,6 +17,7 @@ import NavigationBar from '../../components/NavigationBar'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { tabs } from '../../config/constants'
 import { tabNav } from '../../components/NavigationDelegate'
+import NavigationUtil from '../../utils/NavigationUtils'
 const URL = 'https://api.github.com/search/repositories?q='
 const Tab = createMaterialTopTabNavigator()
 const QUERY_STR = '&sort=stars'
@@ -38,7 +39,21 @@ function TabContent(props) {
     }
   }
   const renderItem = source => {
-    return <PopularItem index={source.index} item={source.item} />
+    return (
+      <PopularItem
+        itemClick={() => {
+          NavigationUtil.goPage(
+            {
+              projectModel: source.item,
+              navigation: props.navigation
+            },
+            'detail'
+          )
+        }}
+        index={source.index}
+        item={source.item}
+      />
+    )
   }
   const genIndicator = () => {
     return data.hideLoadingMore ? null : (

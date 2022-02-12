@@ -3,7 +3,7 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 // import BaseItem from './BaseItem'
 
-export default memo(function index({ item, index }) {
+export default memo(function index({ item, index, itemClick }) {
   const _favoriteIcon = () => {
     return (
       <TouchableOpacity style={{ padding: 6 }} underlayColor="transparent">
@@ -15,7 +15,7 @@ export default memo(function index({ item, index }) {
     return null
   }
   return (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={itemClick}>
       <View style={styles.cell_container}>
         <Text style={styles.title}>{item.full_name}</Text>
         <Text style={styles.description}>{item.description}</Text>

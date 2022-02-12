@@ -1,6 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 // import Trending from 'GitHubTrending'
-
+import constants from '../config/constants'
+import { URL } from 'react-native-url-polyfill'
+import { get } from './http'
 export const FLAG_STORAGE = {
   flag_popular: 'popular',
   flag_trending: 'trending'
@@ -13,34 +15,48 @@ export default class DataStore {
    * @param flag
    * @returns {Promise}
    */
-  fetchData(url, flag) {
-    return new Promise((resolve, reject) => {
-      this.fetchLocalData(url)
-        .then(wrapData => {
-          if (wrapData && DataStore.checkTimestampValid(wrapData.timestamp)) {
-            resolve(wrapData)
-          } else {
-            this.fetchNetData(url, flag)
-              .then(data => {
-                resolve(this._wrapData(data))
-              })
-              .catch(error => {
-                reject(error)
-              })
-          }
-        })
-        .catch(error => {
-          this.fetchNetData(url, flag)
-            .then(data => {
-              resolve(this._wrapData(data))
-            })
-            .catch(error => {
-              reject(error)
-            })
-        })
-    })
+  // fetchData(url, flag) {
+  //   return new Promise((resolve, reject) => {
+  //     this.fetchLocalData(url)
+  //       .then(wrapData => {
+  //         if (wrapData && DataStore.checkTimestampValid(wrapData.timestamp)) {
+  //           resolve(wrapData)
+  //         } else {
+  //           this.fetchNetData(url, flag)
+  //             .then(data => {
+  //               resolve(this._wrapData(data))
+  //             })
+  //             .catch(error => {
+  //               reject(error)
+  //             })
+  //         }
+  //       })
+  //       .catch(error => {
+  //         this.fetchNetData(url, flag)
+  //           .then(data => {
+  //             resolve(this._wrapData(data))
+  //           })
+  //           .catch(error => {
+  //             reject(error)
+  //           })
+  //       })
+  //   })
+  // }
+  fetchData(url, flag, pageIndex = 1, pageSize = 25) {
+    const isTrending = flag === FLAG_STORAGE.flag_trending
+    let api,
+      params = { pageIndex, pageSize }
+    if (isTrending) {
+      api = constants.trending.api
+      params.sourceUrl = url
+    } else {
+      api = constants.popular.api
+      //从url中取出q参数：eg:url https://api.devio.org/uapi/popular?q=java&pageIndex=1&pageSize=25
+      const q = new URL(url).searchParams.get('q')
+      params.q = q
+    }
+    return get(api)(params)
   }
-
   /**
    * 保存数据
    * @param url
@@ -101,8 +117,7 @@ export default class DataStore {
             reject(error)
           })
       } else {
-        new Trending()
-          .fetchTrending(url)
+        fetch(url)
           .then(items => {
             if (!items) {
               throw new Error('responseData is null')

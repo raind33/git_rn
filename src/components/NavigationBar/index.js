@@ -45,7 +45,9 @@ export default class NavigationBar extends Component {
 
   render() {
     let statusBar = !this.props.statusBar.hidden ? (
-      <StatusBar {...this.props.statusBar} />
+      <View style={styles.statusBar}>
+        <StatusBar {...this.props.statusBar} />
+      </View>
     ) : null
 
     let titleView = this.props.titleView ? (
