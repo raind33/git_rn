@@ -79,22 +79,29 @@ function TabContent(props) {
   const loadData = flag => {
     if (flag) {
       dispatch(
-        onLoadMoreTrending(name, ++data.pageIndex, pageSize, data.items, () => {
-          toast.current.show('没有更多了')
-        })
+        onLoadMoreTrending(
+          name,
+          ++data.pageIndex,
+          pageSize,
+          data.items,
+          favoriteDao,
+          () => {
+            toast.current.show('没有更多了')
+          }
+        )
       )
     } else {
-      dispatch(onRefreshTrending(name, url, pageSize))
+      dispatch(onRefreshTrending(name, url, pageSize, favoriteDao))
     }
   }
   useEffect(() => {
-    dispatch(onRefreshTrending(name, url, pageSize))
+    dispatch(onRefreshTrending(name, url, pageSize, favoriteDao))
     console.log(name)
   }, [dispatch, url, name])
   return (
     <View style={styles.container}>
       <FlatList
-        keyExtractor={item => '' + item.id}
+        keyExtractor={item => '' + item.item.id}
         data={data.projectModels}
         renderItem={renderItem}
         ListFooterComponent={genIndicator()}
