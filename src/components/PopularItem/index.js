@@ -1,36 +1,58 @@
-import React, { Component, memo } from 'react'
+import React, { Component, memo, useState } from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 // import BaseItem from './BaseItem'
 
-export default memo(function index({ item, index, itemClick }) {
+export default memo(function Index({
+  projectModel,
+  index,
+  itemClick,
+  onFavorite
+}) {
+  const [favorite, setFavorite] = useState(projectModel.isFavorite)
+  const onPressFavorite = () => {
+    setFavorite(!favorite)
+    onFavorite(projectModel.item, !favorite)
+  }
   const _favoriteIcon = () => {
     return (
-      <TouchableOpacity style={{ padding: 6 }} underlayColor="transparent">
-        <FontAwesome name={'star-o'} size={26} style={{ color: 'red' }} />
+      <TouchableOpacity
+        onPress={onPressFavorite}
+        style={{ padding: 6 }}
+        underlayColor="transparent">
+        <FontAwesome
+          name={favorite ? 'star' : 'star-o'}
+          size={26}
+          style={{ color: 'red' }}
+        />
       </TouchableOpacity>
     )
   }
-  if (!item || !item.owner) {
+  if (!projectModel.item || !projectModel.item.owner) {
     return null
   }
   return (
-    <TouchableOpacity onPress={itemClick}>
+    <TouchableOpacity
+      onPress={() => {
+        itemClick(isFavorite => {
+          setFavorite(isFavorite)
+        })
+      }}>
       <View style={styles.cell_container}>
-        <Text style={styles.title}>{item.full_name}</Text>
-        <Text style={styles.description}>{item.description}</Text>
+        <Text style={styles.title}>{projectModel.item.full_name}</Text>
+        <Text style={styles.description}>{projectModel.item.description}</Text>
         <View style={styles.row}>
           <View style={styles.row}>
             <Text>Author:</Text>
             <Image
               style={{ height: 22, width: 22 }}
-              source={{ uri: item.owner.avatar_url }}
+              source={{ uri: projectModel.item.owner.avatar_url }}
             />
           </View>
           <View
             style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text>Start:</Text>
-            <Text>{item.stargazers_count}</Text>
+            <Text>{projectModel.item.stargazers_count}</Text>
           </View>
           {_favoriteIcon()}
         </View>

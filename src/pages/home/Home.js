@@ -18,9 +18,13 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { tabs } from '../../config/constants'
 import { tabNav } from '../../components/NavigationDelegate'
 import NavigationUtil from '../../utils/NavigationUtils'
+import FavoriteDao from '../../utils/FavoriteUtil'
+import { FLAG_STORAGE } from '../../utils/DataStore'
+
 const URL = 'https://api.github.com/search/repositories?q='
 const Tab = createMaterialTopTabNavigator()
 const QUERY_STR = '&sort=stars'
+const favoriteDao = new FavoriteDao(FLAG_STORAGE.flag_popular)
 const pageSize = 10
 function TabContent(props) {
   const name = props.tabLabel
@@ -38,20 +42,30 @@ function TabContent(props) {
       hideLoadingMore: true //默认隐藏加载更多
     }
   }
+  const onFavorite = (item, isFavorite) => {
+    const key = item.id.toString()
+    if (isFavorite) {
+      favoriteDao.saveFavoriteItem(key, JSON.stringify(item))
+    } else {
+      favoriteDao.removeFavoriteItem(key)
+    }
+  }
   const renderItem = source => {
     return (
       <PopularItem
-        itemClick={() => {
+        itemClick={callback => {
           NavigationUtil.goPage(
             {
               projectModel: source.item,
-              navigation: props.navigation
+              navigation: props.navigation,
+              callback
             },
             'detail'
           )
         }}
+        onFavorite={onFavorite}
         index={source.index}
-        item={source.item}
+        projectModel={source.item}
       />
     )
   }
@@ -67,22 +81,31 @@ function TabContent(props) {
   const loadData = flag => {
     if (flag) {
       dispatch(
-        onLoadMorePopular(name, ++data.pageIndex, pageSize, data.items, () => {
-          toast.current.show('没有更多了')
-        })
+        onLoadMorePopular(
+          name,
+          ++data.pageIndex,
+          pageSize,
+          data.items,
+          favoriteDao,
+          () => {
+            toast.current.show('没有更多了')
+          }
+        )
       )
     } else {
-      dispatch(onRefreshPopular(name, url, pageSize))
+      dispatch(onRefreshPopular(name, url, pageSize, favoriteDao))
     }
   }
   useEffect(() => {
-    dispatch(onRefreshPopular(name, url, pageSize))
+    dispatch(onRefreshPopular(name, url, pageSize, favoriteDao))
     console.log(name)
   }, [dispatch, url, name])
   return (
     <View style={styles.container}>
       <FlatList
-        keyExtractor={item => '' + item.id}
+        keyExtractor={item => {
+          return '' + item.item.id
+        }}
         data={data.projectModels}
         renderItem={renderItem}
         ListFooterComponent={genIndicator()}

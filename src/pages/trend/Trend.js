@@ -17,9 +17,13 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { langs } from '../../config/constants'
 import { tabNav } from '../../components/NavigationDelegate'
 import NavigationUtil from '../../utils/NavigationUtils'
+import FavoriteDao from '../../utils/FavoriteUtil'
+import { FLAG_STORAGE } from '../../utils/DataStore'
 
 const URL = 'https://github.com/trending/'
 const QUERY_STR = '&sort=stars'
+const favoriteDao = new FavoriteDao(FLAG_STORAGE.flag_trending)
+
 const pageSize = 10
 function TabContent(props) {
   const name = props.tabLabel
@@ -37,16 +41,27 @@ function TabContent(props) {
       hideLoadingMore: true //默认隐藏加载更多
     }
   }
+  const onFavorite = (item, isFavorite) => {
+    const key = item.id.toString()
+    if (isFavorite) {
+      favoriteDao.saveFavoriteItem(key, JSON.stringify(item))
+    } else {
+      favoriteDao.removeFavoriteItem(key)
+    }
+  }
   const renderItem = source => {
     return (
       <TrendingItem
-        item={source.item}
-        onSelect={() => {
+        onFavorite={onFavorite}
+        projectModel={source.item}
+        itemClick={callback => {
           NavigationUtil.goPage(
             {
-              projectModel: source
+              projectModel: source.item,
+              navigation: props.navigation,
+              callback
             },
-            'DetailPage'
+            'detail'
           )
         }}
       />

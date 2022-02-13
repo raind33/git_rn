@@ -10,7 +10,7 @@ import { _projectModels, handleData } from './actionUtil'
  * @param favoriteDao
  * @returns {function(*=)}
  */
-export function onRefreshPopular(storeName, url, pageSize) {
+export function onRefreshPopular(storeName, url, pageSize, favoriteDao) {
   return dispatch => {
     dispatch({ type: Types.POPULAR_REFRESH, storeName: storeName })
     let dataStore = new DataStore()
@@ -22,7 +22,8 @@ export function onRefreshPopular(storeName, url, pageSize) {
           dispatch,
           storeName,
           data,
-          pageSize
+          pageSize,
+          favoriteDao
         )
       })
       .catch(error => {
@@ -66,8 +67,8 @@ export function onLoadMorePopular(
           type: Types.POPULAR_LOAD_MORE_FAIL,
           error: 'no more',
           storeName: storeName,
-          pageIndex: --pageIndex,
-          projectModels: dataArray
+          pageIndex: --pageIndex
+          // projectModels: dataArray
         })
       } else {
         //本次和载入的最大数量
@@ -76,14 +77,14 @@ export function onLoadMorePopular(
           pageSize * pageIndex > dataArray.length
             ? dataArray.length
             : pageSize * pageIndex
-        dispatch({
-          type: Types.POPULAR_LOAD_MORE_SUCCESS,
-          storeName,
-          pageIndex,
-          projectModels: dataArray.slice(0, max)
+        _projectModels(dataArray.slice(0, max), favoriteDao, data => {
+          dispatch({
+            type: Types.POPULAR_LOAD_MORE_SUCCESS,
+            storeName,
+            pageIndex,
+            projectModels: data
+          })
         })
-        // _projectModels(dataArray.slice(0, max), favoriteDao, data => {
-        // })
       }
     }, 500)
   }

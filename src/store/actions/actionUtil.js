@@ -40,16 +40,15 @@ export function handleData(
   //第一次要加载的数据
   let showItems =
     pageSize > fixItems.length ? fixItems : fixItems.slice(0, pageSize)
-  // _projectModels(showItems, favoriteDao, projectModels => {
-
-  // })
-  dispatch({
-    type: actionType,
-    items: fixItems,
-    projectModels: showItems,
-    storeName,
-    pageIndex: 1,
-    ...params
+  _projectModels(showItems, favoriteDao, projectModels => {
+    dispatch({
+      type: actionType,
+      items: fixItems,
+      projectModels,
+      storeName,
+      pageIndex: 1,
+      ...params
+    })
   })
 }
 
