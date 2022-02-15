@@ -36,7 +36,8 @@ export default memo(function Main() {
         options={{
           tabBarIcon: ({ size, focused, color }) => {
             return <Icon size={26} color={color} name="favorite" />
-          }
+          },
+          headerShown: false
         }}
         name="favorite"
         component={Favorite}

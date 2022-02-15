@@ -1,18 +1,17 @@
-import React, { Component, useCallback, useEffect, useRef } from 'react'
+import React, { memo, useCallback, useEffect, useRef } from 'react'
 import { FlatList, RefreshControl, StyleSheet, View } from 'react-native'
 import Toast from 'react-native-easy-toast'
-import EventBus from 'react-native-event-bus'
+// import EventBus from 'react-native-event-bus'
 import { useSelector, useDispatch } from 'react-redux'
-import actions from '../action/index'
-import NavigationBar from 'react-native-navbar-plus'
-import PopularItem from '../common/PopularItem'
-import TrendingItem from '../common/TrendingItem'
-import { FLAG_STORAGE } from '../expand/dao/DataStore'
-import { tabNav } from '../navigator/NavigationDelegate'
-import FavoriteDao from '../expand/dao/FavoriteDao'
+import { onLoadFavoriteData } from '../../store/actions'
+import NavigationBar from '../../components/NavigationBar'
+import { tabNav } from '../../components/NavigationDelegate'
 import NavigationUtil from '../../utils/NavigationUtils'
-import EventTypes from '../util/EventTypes'
-import FavoriteUtil from '../../utils/FavoriteUtil'
+import EventTypes from '../../utils/EventTypes'
+import FavoriteDao from '../../utils/FavoriteUtil'
+import { FLAG_STORAGE } from '../../utils/DataStore'
+import TrendingItem from '../trend/components/TrendingItem'
+import PopularItem from '../../components/PopularItem'
 
 const TABS = [
   { name: '最热', checked: true },
@@ -36,7 +35,7 @@ export default memo(function Favorite() {
   const TabNavigator = tabNav({
     Component: FavoriteTab,
     theme,
-    keys: TABS
+    tabs: TABS
   })
   return (
     <View style={styles.container}>
@@ -56,7 +55,7 @@ function FavoriteTab({ tabLabel, theme }) {
   const favoriteDao = new FavoriteDao(storeName)
   const loadData = useCallback(
     isShowLoading => {
-      return dispatch(actions.onLoadFavoriteData(storeName, isShowLoading))
+      return dispatch(onLoadFavoriteData(storeName, isShowLoading))
     },
     [dispatch, storeName]
   )
@@ -82,11 +81,11 @@ function FavoriteTab({ tabLabel, theme }) {
       favoriteDao.removeFavoriteItem(key)
     }
     // FavoriteUtil.onFavorite(favoriteDao, item, isFavorite, storeName)
-    if (storeName === FLAG_STORAGE.flag_popular) {
-      EventBus.getInstance().fireEvent(EventTypes.favorite_changed_popular)
-    } else {
-      EventBus.getInstance().fireEvent(EventTypes.favoriteChanged_trending)
-    }
+    // if (storeName === FLAG_STORAGE.flag_popular) {
+    //   EventBus.getInstance().fireEvent(EventTypes.favorite_changed_popular)
+    // } else {
+    //   EventBus.getInstance().fireEvent(EventTypes.favoriteChanged_trending)
+    // }
   }
   const renderItem = data => {
     const item = data.item
@@ -111,16 +110,16 @@ function FavoriteTab({ tabLabel, theme }) {
   }
   useEffect(() => {
     loadData(true)
-    EventBus.getInstance().addListener(
-      EventTypes.bottom_tab_select,
-      (listener.current = data => {
-        if (data.to === 2) {
-          loadData(false)
-        }
-      })
-    )
+    // EventBus.getInstance().addListener(
+    //   EventTypes.bottom_tab_select,
+    //   (listener.current = data => {
+    //     if (data.to === 2) {
+    //       loadData(false)
+    //     }
+    //   })
+    // )
     return () => {
-      EventBus.getInstance().removeListener(listener.current)
+      // EventBus.getInstance().removeListener(listener.current)
     }
   }, [loadData])
   let store = _store()
