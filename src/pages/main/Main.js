@@ -77,7 +77,8 @@ export default memo(function Main() {
         options={{
           tabBarIcon: ({ size, focused, color }) => {
             return <EntypoIcon size={26} color={color} name="user" />
-          }
+          },
+          headerShown: false
         }}
         name="my"
         component={My}

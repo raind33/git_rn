@@ -16,6 +16,7 @@ import Main from './src/pages/main/Main.js'
 import { Provider } from 'react-redux'
 import store from './src/store'
 import DetailPage from './src/pages/detail/Detail.js'
+import Webview from './src/pages/webview/Webview.js'
 
 const Stack = createNativeStackNavigator()
 const App = () => {
@@ -36,6 +37,7 @@ const App = () => {
           <Stack.Screen name="login" component={Login} />
           <Stack.Screen name="main" component={Main} />
           <Stack.Screen name="detail" component={DetailPage} />
+          <Stack.Screen name="WebViewPage" component={Webview} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
