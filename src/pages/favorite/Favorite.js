@@ -1,5 +1,11 @@
 import React, { memo, useCallback, useEffect, useRef } from 'react'
-import { FlatList, RefreshControl, StyleSheet, View } from 'react-native'
+import {
+  DeviceEventEmitter,
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+  View
+} from 'react-native'
 import Toast from 'react-native-easy-toast'
 // import EventBus from 'react-native-event-bus'
 import { useSelector, useDispatch } from 'react-redux'
@@ -81,11 +87,11 @@ function FavoriteTab({ tabLabel, theme }) {
       favoriteDao.removeFavoriteItem(key)
     }
     // FavoriteUtil.onFavorite(favoriteDao, item, isFavorite, storeName)
-    // if (storeName === FLAG_STORAGE.flag_popular) {
-    //   EventBus.getInstance().fireEvent(EventTypes.favorite_changed_popular)
-    // } else {
-    //   EventBus.getInstance().fireEvent(EventTypes.favoriteChanged_trending)
-    // }
+    if (storeName === FLAG_STORAGE.flag_popular) {
+      DeviceEventEmitter.emit(EventTypes.favorite_changed_popular)
+    } else {
+      DeviceEventEmitter.emit(EventTypes.favoriteChanged_trending)
+    }
   }
   const renderItem = data => {
     const item = data.item
@@ -109,6 +115,14 @@ function FavoriteTab({ tabLabel, theme }) {
     )
   }
   useEffect(() => {
+    DeviceEventEmitter.addListener(
+      EventTypes.bottom_tab_select,
+      (listener.current = data => {
+        if (data.to === 2) {
+          loadData(false)
+        }
+      })
+    )
     loadData(true)
     // EventBus.getInstance().addListener(
     //   EventTypes.bottom_tab_select,
@@ -119,6 +133,7 @@ function FavoriteTab({ tabLabel, theme }) {
     //   })
     // )
     return () => {
+      DeviceEventEmitter.removeAllListeners(EventTypes.bottom_tab_select)
       // EventBus.getInstance().removeListener(listener.current)
     }
   }, [loadData])

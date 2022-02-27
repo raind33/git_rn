@@ -6,7 +6,8 @@ import {
   FlatList,
   ActivityIndicator,
   TouchableOpacity,
-  RefreshControl
+  RefreshControl,
+  DeviceEventEmitter
 } from 'react-native'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import { useSelector, useDispatch } from 'react-redux'
@@ -20,12 +21,15 @@ import { tabNav } from '../../components/NavigationDelegate'
 import NavigationUtil from '../../utils/NavigationUtils'
 import FavoriteDao from '../../utils/FavoriteUtil'
 import { FLAG_STORAGE } from '../../utils/DataStore'
+import EventTypes from '../../utils/EventTypes'
+import { onFlushPopularFavorite } from '../../store/actions/popular'
 
 const URL = 'https://api.github.com/search/repositories?q='
 const Tab = createMaterialTopTabNavigator()
 const QUERY_STR = '&sort=stars'
 const favoriteDao = new FavoriteDao(FLAG_STORAGE.flag_popular)
 const pageSize = 10
+let favoriteChanged = false
 function TabContent(props) {
   const name = props.tabLabel
   const dispatch = useDispatch()
@@ -78,7 +82,7 @@ function TabContent(props) {
     )
   }
 
-  const loadData = flag => {
+  const loadData = (flag, refreshFavorite) => {
     if (flag) {
       dispatch(
         onLoadMorePopular(
@@ -92,13 +96,36 @@ function TabContent(props) {
           }
         )
       )
+    } else if (refreshFavorite) {
+      dispatch(
+        onFlushPopularFavorite(
+          name,
+          data.pageIndex,
+          pageSize,
+          data.items,
+          favoriteDao
+        )
+      )
     } else {
       dispatch(onRefreshPopular(name, url, pageSize, favoriteDao))
     }
   }
   useEffect(() => {
+    DeviceEventEmitter.addListener(
+      EventTypes.favorite_changed_popular,
+      data => {
+        favoriteChanged = true
+      }
+    )
+    DeviceEventEmitter.addListener(EventTypes.bottom_tab_select, data => {
+      if (data.to === 0 && favoriteChanged) {
+        loadData(null, true)
+      }
+    })
+
     dispatch(onRefreshPopular(name, url, pageSize, favoriteDao))
     console.log(name)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, url, name])
   return (
     <View style={styles.container}>
