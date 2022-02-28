@@ -22,7 +22,6 @@ class WebViewPage extends Component {
       url: url,
       canGoBack: false
     }
-    debugger
     this.backPress = new BackPressComponent({
       backPress: () => this.onBackPress()
     })

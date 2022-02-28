@@ -17,8 +17,10 @@ import NavigationUtil from '../../utils/NavigationUtils'
 
 class MyPage extends Component {
   onClick(menu) {
+    const { theme } = this.props
     let RouteName,
       params = {
+        theme,
         navigation: this.props.navigation
       }
     switch (menu) {
@@ -34,7 +36,6 @@ class MyPage extends Component {
         RouteName = 'AboutMePage'
         break
     }
-    debugger
     if (RouteName) {
       NavigationUtil.goPage(params, RouteName)
     }
