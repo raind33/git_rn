@@ -47,11 +47,13 @@ export default class AboutMePage extends Component<Props> {
     }
     const { theme } = this.params
     if (tab.url) {
+      debugger
       NavigationUtil.goPage(
         {
           theme,
           title: tab.title,
-          url: tab.url
+          url: tab.url,
+          navigation: this.props.navigation
         },
         'WebViewPage'
       )

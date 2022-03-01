@@ -15,7 +15,7 @@ import ShareUtil from '../../utils/ShareUtil'
 import share from '../../config/share.json'
 import NavigationUtil from '../../utils/NavigationUtils'
 import ViewUtil from '../../utils/ViewUtil'
-
+import about from '../../config/about.json'
 export const FLAG_ABOUT = { flag_about: 'about', flag_about_me: 'about_me' }
 export default class AboutCommon {
   constructor(props, updateState) {
@@ -33,23 +33,9 @@ export default class AboutCommon {
 
   componentDidMount() {
     this.backPress.componentDidMount()
-    fetch('https://www.devio.org/io/GitHubPopular/json/github_app_config.json')
-      .then(response => {
-        if (response.ok) {
-          return response.json()
-        }
-        throw new Error('Network Error')
-      })
-      .then(config => {
-        if (config) {
-          this.updateState({
-            data: config
-          })
-        }
-      })
-      .catch(e => {
-        console(e)
-      })
+    this.updateState({
+      data: about
+    })
   }
 
   componentWillUnmount() {
@@ -185,7 +171,6 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
     paddingRight: 8,
-    backgroundColor: 'red',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
