@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { View, Linking } from 'react-native'
-import { Clipboard } from '@react-native-community/clipboard'
+import Clipboard from '@react-native-community/clipboard'
 import AboutCommon, { FLAG_ABOUT } from './AboutCommon'
 import config from '../../config/about.json'
 import GlobalStyles from '../../assets/styles/global'

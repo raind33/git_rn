@@ -16,13 +16,15 @@ import PopularItem from '../../components/PopularItem'
 import Toast from 'react-native-easy-toast'
 import NavigationBar from '../../components/NavigationBar'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import { tabs } from '../../config/constants'
+// import { tabs } from '../../config/constants'
 import { tabNav } from '../../components/NavigationDelegate'
 import NavigationUtil from '../../utils/NavigationUtils'
 import FavoriteDao from '../../utils/FavoriteUtil'
 import { FLAG_STORAGE } from '../../utils/DataStore'
 import EventTypes from '../../utils/EventTypes'
 import { onFlushPopularFavorite } from '../../store/actions/popular'
+import { FLAG_LANGUAGE } from '../../utils/LanguageUtil'
+import { onLoadLanguage } from '@/store/actions'
 
 const URL = 'https://api.github.com/search/repositories?q='
 const Tab = createMaterialTopTabNavigator()
@@ -157,10 +159,17 @@ function TabContent(props) {
 }
 
 export default memo(function Home() {
+  const dispatch = useDispatch()
+  let data = useSelector(state => {
+    return state.language.keys
+  })
   let statusBar = {
     backgroundColor: 'red',
     barStyle: 'light-content'
   }
+  useEffect(() => {
+    dispatch(onLoadLanguage(FLAG_LANGUAGE.flag_key))
+  }, [dispatch])
   const renderRightButton = () => {
     return (
       <TouchableOpacity>
@@ -186,8 +195,12 @@ export default memo(function Home() {
       rightButton={renderRightButton()}
     />
   )
-  const TabNavigator = tabs.length
-    ? tabNav({ Component: TabContent, theme: { themeColor: '#2196f3' }, tabs })
+  const TabNavigator = data.length
+    ? tabNav({
+        Component: TabContent,
+        theme: { themeColor: '#2196f3' },
+        tabs: data
+      })
     : null
   return (
     <View style={{ flex: 1 }}>

@@ -19,6 +19,7 @@ import DetailPage from './src/pages/detail/Detail.js'
 import Webview from './src/pages/webview/Webview.js'
 import About from './src/pages/about/AboutPage'
 import AboutMe from './src/pages/about/AboutMePage'
+import Theme from '@/pages/theme/Theme.js'
 
 const Stack = createNativeStackNavigator()
 const App = () => {
@@ -42,6 +43,7 @@ const App = () => {
           <Stack.Screen name="WebViewPage" component={Webview} />
           <Stack.Screen name="AboutPage" component={About} />
           <Stack.Screen name="AboutMePage" component={AboutMe} />
+          <Stack.Screen name="Theme" component={Theme} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

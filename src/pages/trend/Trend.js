@@ -9,16 +9,20 @@ import {
   RefreshControl
 } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
-import { onLoadMoreTrending, onRefreshTrending } from '../../store/actions'
+import {
+  onLoadMoreTrending,
+  onRefreshTrending,
+  onLoadLanguage
+} from '../../store/actions'
 import TrendingItem from './components/TrendingItem'
 import Toast from 'react-native-easy-toast'
 import NavigationBar from '../../components/NavigationBar'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import { langs } from '../../config/constants'
 import { tabNav } from '../../components/NavigationDelegate'
 import NavigationUtil from '../../utils/NavigationUtils'
 import FavoriteDao from '../../utils/FavoriteUtil'
 import { FLAG_STORAGE } from '../../utils/DataStore'
+import { FLAG_LANGUAGE } from '@/utils/LanguageUtil'
 
 const URL = 'https://github.com/trending/'
 const QUERY_STR = '&sort=stars'
@@ -126,6 +130,10 @@ function TabContent(props) {
 }
 
 export default memo(function Trending(props) {
+  const dispatch = useDispatch()
+  let data = useSelector(state => {
+    return state.language.languages
+  })
   const theme = useSelector(state => {
     return state.theme.themeStyle
   })
@@ -171,12 +179,15 @@ export default memo(function Trending(props) {
     // }
     return tabNav({
       Component: TabContent,
-      tabs: langs,
+      tabs: data,
       theme,
       uniKey: 'trend'
     })
   }
-  const TabNavigator = langs.length ? _tabNav() : null
+  const TabNavigator = data.length ? _tabNav() : null
+  useEffect(() => {
+    dispatch(onLoadLanguage(FLAG_LANGUAGE.flag_language))
+  }, [dispatch])
   return (
     <View style={{ flex: 1 }}>
       {navigationBar}

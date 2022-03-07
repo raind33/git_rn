@@ -12,7 +12,7 @@ import { MORE_MENU } from '../../config/menu'
 import GlobalStyles from '../../assets/styles/global'
 import ViewUtil from '../../utils/ViewUtil'
 import NavigationBar from '../../components/NavigationBar'
-import { onThemeChange } from '../../store/actions/theme'
+import { onShowCustomThemeView } from '../../store/actions/theme'
 import NavigationUtil from '../../utils/NavigationUtils'
 
 class MyPage extends Component {
@@ -34,6 +34,10 @@ class MyPage extends Component {
         break
       case MORE_MENU.About_Author:
         RouteName = 'AboutMePage'
+        break
+      case MORE_MENU.Custom_Theme:
+        const { showTheme } = this.props
+        showTheme(true)
         break
     }
     if (RouteName) {
@@ -128,7 +132,7 @@ const mapStateToProps = state => ({
 })
 //将dispatch映射给onThemeChange，然后注入到组件的props中
 const mapDispatchToProps = dispatch => ({
-  onThemeChange: theme => dispatch(onThemeChange(theme))
+  showTheme: show => dispatch(onShowCustomThemeView(show))
 })
 export default connect(mapStateToProps, mapDispatchToProps)(MyPage)
 const styles = StyleSheet.create({

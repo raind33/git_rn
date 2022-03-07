@@ -11,10 +11,18 @@ import Favorite from '../favorite/Favorite'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 import EventTypes from '../../utils/EventTypes'
+import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { onShowCustomThemeView } from '@/store/actions'
+import CustomTheme from '@/pages/theme/Theme'
 
 const Tab = createBottomTabNavigator()
-export default memo(function Main() {
+export default memo(function Main(props) {
   const lastTabIndex = useRef(null)
+  const dispatch = useDispatch()
+  const customThemeViewVisible = useSelector(state => {
+    return state.theme.customThemeViewVisible
+  })
   const fireEvent = navigationState => {
     const { index, history, routeNames } = navigationState
     let fromIndex = -1
@@ -37,52 +45,64 @@ export default memo(function Main() {
     //记录上一次的位置
     lastTabIndex.current = index
   }
+  const renderCustomThemeView = () => {
+    return (
+      <CustomTheme
+        visible={customThemeViewVisible}
+        {...props}
+        onClose={() => dispatch(onShowCustomThemeView(false))}
+      />
+    )
+  }
   return (
-    <Tab.Navigator
-      tabBar={props => {
-        fireEvent(props.state)
-        return <BottomTabBar {...props} />
-      }}>
-      <Tab.Screen
-        options={{
-          tabBarIcon: ({ size, focused, color }) => {
-            return <Icon size={26} color={color} name="whatshot" />
-          },
-          headerShown: false
-        }}
-        name="hot"
-        component={Home}
-      />
-      <Tab.Screen
-        options={{
-          tabBarIcon: ({ size, focused, color }) => {
-            return <Icon size={26} color={color} name="trending-up" />
-          },
-          headerShown: false
-        }}
-        name="trend"
-        component={Trend}
-      />
-      <Tab.Screen
-        options={{
-          tabBarIcon: ({ size, focused, color }) => {
-            return <Icon size={26} color={color} name="favorite" />
-          },
-          headerShown: false
-        }}
-        name="favorite"
-        component={Favorite}
-      />
-      <Tab.Screen
-        options={{
-          tabBarIcon: ({ size, focused, color }) => {
-            return <EntypoIcon size={26} color={color} name="user" />
-          },
-          headerShown: false
-        }}
-        name="my"
-        component={My}
-      />
-    </Tab.Navigator>
+    <>
+      <Tab.Navigator
+        tabBar={props => {
+          fireEvent(props.state)
+          return <BottomTabBar {...props} />
+        }}>
+        <Tab.Screen
+          options={{
+            tabBarIcon: ({ size, focused, color }) => {
+              return <Icon size={26} color={color} name="whatshot" />
+            },
+            headerShown: false
+          }}
+          name="hot"
+          component={Home}
+        />
+        <Tab.Screen
+          options={{
+            tabBarIcon: ({ size, focused, color }) => {
+              return <Icon size={26} color={color} name="trending-up" />
+            },
+            headerShown: false
+          }}
+          name="trend"
+          component={Trend}
+        />
+        <Tab.Screen
+          options={{
+            tabBarIcon: ({ size, focused, color }) => {
+              return <Icon size={26} color={color} name="favorite" />
+            },
+            headerShown: false
+          }}
+          name="favorite"
+          component={Favorite}
+        />
+        <Tab.Screen
+          options={{
+            tabBarIcon: ({ size, focused, color }) => {
+              return <EntypoIcon size={26} color={color} name="user" />
+            },
+            headerShown: false
+          }}
+          name="my"
+          component={My}
+        />
+      </Tab.Navigator>
+      {renderCustomThemeView()}
+    </>
   )
 })
