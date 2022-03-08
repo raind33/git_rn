@@ -40,6 +40,7 @@ function TabContent(props) {
   let data = useSelector(state => {
     return state.popular?.[name]
   })
+
   if (!data) {
     data = {
       items: [],
@@ -163,6 +164,9 @@ export default memo(function Home() {
   let data = useSelector(state => {
     return state.language.keys
   })
+  const theme = useSelector(state => {
+    return state.theme.theme
+  })
   let statusBar = {
     backgroundColor: 'red',
     barStyle: 'light-content'
@@ -191,14 +195,14 @@ export default memo(function Home() {
     <NavigationBar
       title={'最热'}
       statusBar={statusBar}
-      style={{ backgroundColor: '#2196f3' }}
+      style={{ backgroundColor: theme.themeColor }}
       rightButton={renderRightButton()}
     />
   )
   const TabNavigator = data.length
     ? tabNav({
         Component: TabContent,
-        theme: { themeColor: '#2196f3' },
+        theme,
         tabs: data
       })
     : null

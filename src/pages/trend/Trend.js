@@ -135,7 +135,7 @@ export default memo(function Trending(props) {
     return state.language.languages
   })
   const theme = useSelector(state => {
-    return state.theme.themeStyle
+    return state.theme.theme
   })
   let statusBar = {
     backgroundColor: theme.themeColor,

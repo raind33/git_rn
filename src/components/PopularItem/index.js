@@ -1,6 +1,7 @@
 import React, { Component, memo, useState } from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import { useSelector } from 'react-redux'
 // import BaseItem from './BaseItem'
 
 export default memo(function Index({
@@ -14,6 +15,9 @@ export default memo(function Index({
     setFavorite(!favorite)
     onFavorite(projectModel.item, !favorite)
   }
+  const theme = useSelector(state => {
+    return state.theme.theme
+  })
   const _favoriteIcon = () => {
     return (
       <TouchableOpacity
@@ -23,7 +27,7 @@ export default memo(function Index({
         <FontAwesome
           name={favorite ? 'star' : 'star-o'}
           size={26}
-          style={{ color: 'red' }}
+          style={{ color: theme.themeColor }}
         />
       </TouchableOpacity>
     )

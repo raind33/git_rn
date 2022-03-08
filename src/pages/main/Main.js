@@ -23,6 +23,9 @@ export default memo(function Main(props) {
   const customThemeViewVisible = useSelector(state => {
     return state.theme.customThemeViewVisible
   })
+  const theme = useSelector(state => {
+    return state.theme.theme
+  })
   const fireEvent = navigationState => {
     const { index, history, routeNames } = navigationState
     let fromIndex = -1
@@ -66,7 +69,8 @@ export default memo(function Main(props) {
             tabBarIcon: ({ size, focused, color }) => {
               return <Icon size={26} color={color} name="whatshot" />
             },
-            headerShown: false
+            headerShown: false,
+            tabBarActiveTintColor: theme.themeColor
           }}
           name="hot"
           component={Home}
@@ -76,7 +80,8 @@ export default memo(function Main(props) {
             tabBarIcon: ({ size, focused, color }) => {
               return <Icon size={26} color={color} name="trending-up" />
             },
-            headerShown: false
+            headerShown: false,
+            tabBarActiveTintColor: theme.themeColor
           }}
           name="trend"
           component={Trend}
@@ -86,7 +91,8 @@ export default memo(function Main(props) {
             tabBarIcon: ({ size, focused, color }) => {
               return <Icon size={26} color={color} name="favorite" />
             },
-            headerShown: false
+            headerShown: false,
+            tabBarActiveTintColor: theme.themeColor
           }}
           name="favorite"
           component={Favorite}
@@ -96,7 +102,8 @@ export default memo(function Main(props) {
             tabBarIcon: ({ size, focused, color }) => {
               return <EntypoIcon size={26} color={color} name="user" />
             },
-            headerShown: false
+            headerShown: false,
+            tabBarActiveTintColor: theme.themeColor
           }}
           name="my"
           component={My}

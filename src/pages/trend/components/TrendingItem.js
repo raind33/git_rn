@@ -2,12 +2,16 @@ import React, { Component, memo, useState } from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import HTMLView from 'react-native-htmlview'
+import { useSelector } from 'react-redux'
 export default memo(function TrendingItem({
   projectModel,
   itemClick,
   onFavorite
 }) {
   const [favorite, setFavorite] = useState(projectModel.isFavorite)
+  const theme = useSelector(state => {
+    return state.theme.theme
+  })
   const onPressFavorite = () => {
     setFavorite(!favorite)
     onFavorite(projectModel.item, !favorite)
@@ -21,7 +25,7 @@ export default memo(function TrendingItem({
       <FontAwesome
         name={favorite ? 'star' : 'star-o'}
         size={26}
-        style={{ color: 'red' }}
+        style={{ color: theme.themeColor }}
       />
     </TouchableOpacity>
   )

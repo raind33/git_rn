@@ -2,7 +2,7 @@ import Types from '../types'
 import ThemeFactory, { ThemeFlags } from '../../utils/ThemeFactory'
 
 const defaultState = {
-  themeStyle: ThemeFactory.createTheme(ThemeFlags.Default),
+  theme: ThemeFactory.createTheme(ThemeFlags.Default),
   onShowCustomThemeView: false
 }
 export default function onAction(state = defaultState, action) {
